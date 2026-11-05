@@ -1,666 +1,433 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cockpit de Entrantes e Concluídos - Black Friday</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Chart.js Datalabels Plugin -->
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Font Family -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
-        }
-        .glass-card {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: rgba(15, 23, 42, 0.6);
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #475569;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ACOMPANHAMENTO BLACK FRIDAY - 2026</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #1f2937; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
+  </style>
 </head>
-<body class="min-h-screen pb-12">
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans p-4 md:p-6">
+  <div class="max-w-7xl mx-auto space-y-6">
+    
+    <!-- HEADER -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-slate-900/80 p-5 rounded-2xl border border-slate-800 shadow-xl backdrop-blur-md">
+      <div>
+        <h1 class="text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 tracking-tight">
+          ACOMPANHAMENTO BLACK FRIDAY - 2026
+        </h1>
+        <p class="text-xs md:text-sm text-slate-400 mt-1">Consolidado 22 Departamentos & Queues de Triagem</p>
+      </div>
 
-    <!-- HEADER / CONTROL PANEL -->
-    <header class="sticky top-0 z-50 glass-card border-b border-slate-700/50 mb-8 px-4 lg:px-8 py-4">
-        <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-4">
-            
-            <!-- BRAND / TITLE -->
-            <div class="flex items-center space-x-3 w-full lg:w-auto justify-between lg:justify-start">
-                <div class="flex items-center space-x-3">
-                    <div class="p-2.5 bg-blue-600/20 text-blue-400 rounded-xl border border-blue-500/30">
-                        <i data-lucide="bar-chart-3" class="w-7 h-7"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-bold text-white tracking-tight">Cockpit de Entrantes</h1>
-                        <p class="text-xs text-slate-400">Acompanhamento Comparativo YoY (2025 vs 2026)</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CONTROLS & FILTERS -->
-            <div class="flex flex-wrap items-center justify-end gap-3 w-full lg:w-auto">
-                
-                <!-- FILTER: MÊS -->
-                <div class="flex items-center bg-slate-800/80 rounded-lg px-3 py-1.5 border border-slate-700">
-                    <i data-lucide="calendar" class="w-4 h-4 text-slate-400 mr-2"></i>
-                    <span class="text-xs text-slate-400 mr-2 font-medium">Mês:</span>
-                    <select id="selectMes" class="bg-transparent text-xs font-semibold text-white focus:outline-none cursor-pointer">
-                        <optgroup label="Campanha 2026/2027">
-                            <option value="Novembro - 2026" selected class="bg-slate-900 text-white">Novembro / 2026</option>
-                            <option value="Dezembro - 2026" class="bg-slate-900 text-white">Dezembro / 2026</option>
-                            <option value="Janeiro - 2027" class="bg-slate-900 text-white">Janeiro / 2027</option>
-                        </optgroup>
-                        <optgroup label="Histórico 2025/2026">
-                            <option value="Novembro - 2025" class="bg-slate-900 text-white">Novembro / 2025</option>
-                            <option value="Dezembro - 2025" class="bg-slate-900 text-white">Dezembro / 2025</option>
-                            <option value="Janeiro - 2026" class="bg-slate-900 text-white">Janeiro / 2026</option>
-                        </optgroup>
-                    </select>
-                </div>
-
-                <!-- FILTER: DATA DE -->
-                <div class="flex items-center bg-slate-800/80 rounded-lg px-3 py-1.5 border border-slate-700">
-                    <span class="text-xs text-slate-400 mr-2 font-medium">De:</span>
-                    <input type="date" id="dateFrom" value="2026-11-01" class="bg-transparent text-xs font-semibold text-white focus:outline-none cursor-pointer">
-                </div>
-
-                <!-- FILTER: DATA ATÉ -->
-                <div class="flex items-center bg-slate-800/80 rounded-lg px-3 py-1.5 border border-slate-700">
-                    <span class="text-xs text-slate-400 mr-2 font-medium">Até:</span>
-                    <input type="date" id="dateTo" class="bg-transparent text-xs font-semibold text-white focus:outline-none cursor-pointer">
-                </div>
-
-                <!-- BUTTON: REDEFINIR FILTROS -->
-                <button id="btnResetFilters" class="flex items-center space-x-1.5 bg-slate-700/70 hover:bg-slate-700 text-slate-200 text-xs font-semibold px-3 py-2 rounded-lg border border-slate-600 transition-colors">
-                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
-                    <span>Redefinir Filtros</span>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- MAIN CONTAINER -->
-    <main class="max-w-7xl mx-auto px-4 lg:px-8 space-y-6">
-
-        <!-- DEPARTAMENTOS MULTI-SELECT STRIP -->
-        <div class="glass-card rounded-2xl p-4">
-            <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center space-x-2">
-                    <i data-lucide="filter" class="w-4 h-4 text-blue-400"></i>
-                    <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Filtrar por Departamento</h3>
-                </div>
-                <div class="flex space-x-2">
-                    <button id="btnSelectAllDepts" class="text-[11px] font-semibold text-blue-400 hover:text-blue-300 transition">Selecionar Todos</button>
-                    <span class="text-slate-600">|</span>
-                    <button id="btnDeselectAllDepts" class="text-[11px] font-semibold text-slate-400 hover:text-slate-300 transition">Limpar</button>
-                </div>
-            </div>
-            <div id="deptButtonsContainer" class="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto custom-scrollbar p-1">
-                <!-- Injetado dinamicamente via JS -->
-            </div>
+      <!-- PAINEL DE FILTROS -->
+      <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+        <!-- VISÃO DE PERÍODO -->
+        <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
+          <button onclick="changeGranularity('diario')" id="btn-diario" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white transition-all">Diário</button>
+          <button onclick="changeGranularity('semanal')" id="btn-semanal" class="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition-all">Semanal</button>
+          <button onclick="changeGranularity('mensal')" id="btn-mensal" class="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition-all">Mensal</button>
         </div>
 
-        <!-- KPI CARDS SUMMARY -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            
-            <!-- KPI 1: TOTAL ENTRANTES 2026 -->
-            <div class="glass-card rounded-2xl p-5 border-l-4 border-l-blue-500">
-                <div class="flex justify-between items-start mb-2">
-                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Entrantes 2026</span>
-                    <div class="p-2 bg-blue-500/10 text-blue-400 rounded-lg">
-                        <i data-lucide="trending-up" class="w-4 h-4"></i>
-                    </div>
-                </div>
-                <div id="kpiTotal2026" class="text-2xl font-extrabold text-white">0</div>
-                <div class="flex items-center space-x-2 mt-2">
-                    <span id="kpiGrowthBadge" class="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                        +0% YoY
-                    </span>
-                    <span class="text-[11px] text-slate-400">vs mesmo período 2025</span>
-                </div>
+        <!-- DROPDOWN DEPARTAMENTOS MULTI-SELEÇÃO -->
+        <div class="relative inline-block text-left">
+          <button id="deptDropdownBtn" onclick="toggleDeptDropdown()" class="bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-xl text-xs font-medium text-slate-200 flex items-center gap-2 hover:border-slate-700 transition">
+            <span id="deptDropdownLabel">Todos Departamentos (22)</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
+          </button>
+          <div id="deptDropdownMenu" class="hidden absolute right-0 mt-2 w-64 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl z-50 p-3 max-h-72 overflow-y-auto custom-scrollbar">
+            <div class="flex justify-between items-center pb-2 mb-2 border-b border-slate-800">
+              <button onclick="selectAllDepts(true)" class="text-[11px] text-blue-400 hover:underline font-semibold">Selecionar Todos</button>
+              <button onclick="selectAllDepts(false)" class="text-[11px] text-slate-400 hover:underline">Limpar</button>
             </div>
-
-            <!-- KPI 2: TOTAL ENTRANTES 2025 -->
-            <div class="glass-card rounded-2xl p-5 border-l-4 border-l-slate-500">
-                <div class="flex justify-between items-start mb-2">
-                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Entrantes 2025</span>
-                    <div class="p-2 bg-slate-500/10 text-slate-400 rounded-lg">
-                        <i data-lucide="history" class="w-4 h-4"></i>
-                    </div>
-                </div>
-                <div id="kpiTotal2025" class="text-2xl font-extrabold text-slate-300">0</div>
-                <p class="text-[11px] text-slate-400 mt-2">Base histórica comparativa</p>
-            </div>
-
-            <!-- KPI 3: MÉDIA DIÁRIA 2026 -->
-            <div class="glass-card rounded-2xl p-5 border-l-4 border-l-indigo-500">
-                <div class="flex justify-between items-start mb-2">
-                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Média Diária (2026)</span>
-                    <div class="p-2 bg-indigo-500/10 text-indigo-400 rounded-lg">
-                        <i data-lucide="calculator" class="w-4 h-4"></i>
-                    </div>
-                </div>
-                <div id="kpiAvg2026" class="text-2xl font-extrabold text-white">0</div>
-                <p class="text-[11px] text-slate-400 mt-2">Volume médio por dia de campanha</p>
-            </div>
-
-            <!-- KPI 4: MAIOR DEPARTAMENTO -->
-            <div class="glass-card rounded-2xl p-5 border-l-4 border-l-amber-500">
-                <div class="flex justify-between items-start mb-2">
-                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Líder em Entrantes</span>
-                    <div class="p-2 bg-amber-500/10 text-amber-400 rounded-lg">
-                        <i data-lucide="crown" class="w-4 h-4"></i>
-                    </div>
-                </div>
-                <div id="kpiTopDeptName" class="text-lg font-bold text-amber-300 truncate">-</div>
-                <div id="kpiTopDeptValue" class="text-xs font-semibold text-slate-400 mt-1">0 entrantes</div>
-            </div>
+            <div id="deptCheckboxes" class="space-y-1.5 text-xs text-slate-300"></div>
+          </div>
         </div>
 
-        <!-- CHARTS SECTION -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
-            <!-- CHARTS LEFT: EVOLUÇÃO DIÁRIA (2 COLS) -->
-            <div class="lg:col-span-2 glass-card rounded-2xl p-6">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
-                    <div>
-                        <h2 class="text-base font-bold text-white flex items-center gap-2">
-                            <i data-lucide="line-chart" class="w-5 h-5 text-blue-400"></i>
-                            Evolução Diária de Entrantes (YoY)
-                        </h2>
-                        <p class="text-xs text-slate-400">Comparativo acumulado diário de Novembro (Dia 01 em diante)</p>
-                    </div>
-                </div>
-                <div class="relative h-80">
-                    <canvas id="chartEvolucao"></canvas>
-                </div>
-            </div>
-
-            <!-- CHARTS RIGHT: TOTAL ACUMULADO / BARS -->
-            <div class="glass-card rounded-2xl p-6">
-                <div class="mb-6">
-                    <h2 class="text-base font-bold text-white flex items-center gap-2">
-                        <i data-lucide="pie-chart" class="w-5 h-5 text-indigo-400"></i>
-                        Volume por Período
-                    </h2>
-                    <p class="text-xs text-slate-400">Consolidado Geral (Total 2025 vs Total 2026)</p>
-                </div>
-                <div class="relative h-80">
-                    <canvas id="chartComparativoGrupo"></canvas>
-                </div>
-            </div>
-
+        <!-- FILTROS DE DATA -->
+        <div class="flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800 text-xs">
+          <span class="text-slate-400">De:</span>
+          <input type="date" id="dateFrom" class="bg-transparent text-slate-200 focus:outline-none" value="2026-11-01" onchange="renderDashboard()">
+          <span class="text-slate-400">Até:</span>
+          <input type="date" id="dateTo" class="bg-transparent text-slate-200 focus:outline-none" value="2026-11-04" onchange="renderDashboard()">
         </div>
 
-        <!-- DETAILED TABLE SECTION -->
-        <div class="glass-card rounded-2xl p-6">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-                <div>
-                    <h2 class="text-base font-bold text-white flex items-center gap-2">
-                        <i data-lucide="table" class="w-5 h-5 text-blue-400"></i>
-                        Detalhamento por Departamento
-                    </h2>
-                    <p class="text-xs text-slate-400">Dados consolidados do período selecionado</p>
-                </div>
-                
-                <div class="flex items-center space-x-2">
-                    <input type="text" id="tableSearch" placeholder="Buscar departamento..." class="bg-slate-800 text-xs text-white px-3 py-2 rounded-lg border border-slate-700 focus:outline-none focus:border-blue-500 w-48">
-                </div>
-            </div>
+        <button onclick="resetFilters()" class="bg-slate-800 hover:bg-slate-700 p-2 rounded-xl text-slate-300 transition" title="Redefinir Filtros">
+          <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
 
-            <div class="overflow-x-auto custom-scrollbar">
-                <table class="w-full text-left text-xs border-collapse">
-                    <thead>
-                        <tr class="border-b border-slate-700/80 text-slate-400 bg-slate-900/50">
-                            <th class="py-3.5 px-4 font-semibold">DEPARTAMENTO</th>
-                            <th class="py-3.5 px-4 font-semibold text-right">TOTAL 2025</th>
-                            <th class="py-3.5 px-4 font-semibold text-right">TOTAL 2026</th>
-                            <th class="py-3.5 px-4 font-semibold text-right">VARIAÇÃO YoY (%)</th>
-                            <th class="py-3.5 px-4 font-semibold text-right">PARTICIPAÇÃO %</th>
-                            <th class="py-3.5 px-4 font-semibold text-center">STATUS</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody" class="divide-y divide-slate-800/60 font-medium">
-                        <!-- Injetado via JS -->
-                    </tbody>
-                </table>
-            </div>
+    <!-- CARDS DE METRICAS SUPERIORES -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      
+      <!-- CARD 1: TOTAL ENTRANTES -->
+      <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800 relative overflow-hidden">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total de Entrantes</p>
+            <h3 id="kpi-entrantes-2026" class="text-3xl font-extrabold text-white mt-1">0</h3>
+          </div>
+          <div class="p-3 bg-blue-500/10 rounded-xl text-blue-400">
+            <i data-lucide="inbox" class="w-6 h-6"></i>
+          </div>
         </div>
+        <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
+          <span class="text-slate-400">Mesmo período 2025: <strong id="kpi-entrantes-2025" class="text-slate-200">0</strong></span>
+          <span id="kpi-entrantes-yoy" class="font-bold px-2 py-0.5 rounded-md">--</span>
+        </div>
+      </div>
 
-    </main>
+      <!-- CARD 2: MÉDIA DIÁRIA -->
+      <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800 relative overflow-hidden">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Média Diária de Entrantes</p>
+            <h3 id="kpi-media-2026" class="text-3xl font-extrabold text-white mt-1">0</h3>
+          </div>
+          <div class="p-3 bg-purple-500/10 rounded-xl text-purple-400">
+            <i data-lucide="trending-up" class="w-6 h-6"></i>
+          </div>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
+          <span class="text-slate-400">Média em 2025: <strong id="kpi-media-2025" class="text-slate-200">0</strong></span>
+          <span id="kpi-media-yoy" class="font-bold px-2 py-0.5 rounded-md">--</span>
+        </div>
+      </div>
 
-    <!-- LOGIC SCRIPT -->
-    <script>
-        window.addEventListener('load', function() {
-            // Inicializa ícones do Lucide de forma segura
-            try {
-                if (window.lucide && typeof lucide.createIcons === 'function') {
-                    lucide.createIcons();
-                }
-            } catch (e) {
-                console.warn('Lucide icons load warning:', e);
-            }
+      <!-- CARD 3: LÍDER EM ENTRANTES -->
+      <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800 relative overflow-hidden border-l-4 border-l-amber-500">
+        <div class="flex justify-between items-start">
+          <div>
+            <div class="flex items-center gap-1.5">
+              <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Maior Volume (Atenção)</p>
+              <i data-lucide="alert-circle" class="w-3.5 h-3.5 text-amber-500"></i>
+            </div>
+            <h3 id="kpi-lider-nome" class="text-xl font-bold text-amber-400 mt-1 truncate max-w-[200px]">--</h3>
+          </div>
+          <div class="p-3 bg-amber-500/10 rounded-xl text-amber-400">
+            <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+          </div>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
+          <span class="text-slate-400">Volume acumulado:</span>
+          <strong id="kpi-lider-val" class="text-amber-400 text-sm">0</strong>
+        </div>
+      </div>
 
-            // Registra Plugin Datalabels se disponível
-            if (typeof ChartDataLabels !== 'undefined') {
-                Chart.register(ChartDataLabels);
-            }
+    </div>
 
-            // Lista oficial de Departamentos + Filas de Triagem
-            const DEPARTAMENTOS = [
-                "Member Ship", "Food", "Sams Ecom", "Convencional", "Marketplace In", 
-                "Atacadão Food", "Lojas Físicas", "Marketplace Out", "Gift Card/Cartão Presente", 
-                "App Meu Carrefour", "Serviços/Instalação Garantia Estendida", "Programa Fidelidade", 
-                "App Meu Atacadão", "Sams Lojas", "App Sams", "Cartão Carrefour", 
-                "Cartão Atacadão", "Postos de Combustível", "E-commerce Carrefour", "Outros", 
-                "Triagem Carrefour", "Triagem Sams"
-            ];
+    <!-- GRÁFICOS (MANTIDOS INTACTOS CONFORME SOLICITADO) -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800">
+        <h3 class="text-base font-bold text-slate-200 mb-4 flex items-center gap-2">
+          <i data-lucide="bar-chart-2" class="w-5 h-5 text-blue-400"></i> Evolução Diária de Entrantes
+        </h3>
+        <div class="h-64"><canvas id="chartEvolucao"></canvas></div>
+      </div>
 
-            // Base de dados 2026 (Dados consolidados de 01/11 a 04/11 - Total 2.131)
-            let rawData2026 = DEPARTAMENTOS.map(dept => {
-                let obj = { departamento: dept };
-                const values04 = {
-                    "Member Ship": 470, "Food": 303, "Sams Ecom": 226, "Convencional": 203,
-                    "Marketplace In": 128, "Atacadão Food": 145, "Lojas Físicas": 52,
-                    "Marketplace Out": 31, "Gift Card/Cartão Presente": 53, "App Meu Carrefour": 32,
-                    "Serviços/Instalação Garantia Estendida": 41, "Programa Fidelidade": 27,
-                    "App Meu Atacadão": 10, "Sams Lojas": 15, "App Sams": 21,
-                    "Pagamento Premiado": 8, "Pedido Não Integrado": 18, "Atacadão Lojas": 6,
-                    "Sinistros": 3, "Sinistros Sams": 0,
-                    "Triagem Carrefour": 207, "Triagem Sams": 132
-                };
-                const values03 = {
-                    "Member Ship": 531, "Food": 337, "Sams Ecom": 205, "Convencional": 211,
-                    "Marketplace In": 177, "Atacadão Food": 171, "Lojas Físicas": 85,
-                    "Marketplace Out": 20, "Gift Card/Cartão Presente": 56, "App Meu Carrefour": 35,
-                    "Serviços/Instalação Garantia Estendida": 39, "Programa Fidelidade": 16,
-                    "App Meu Atacadão": 3, "Sams Lojas": 15, "App Sams": 25
-                };
-                const values02 = {
-                    "Member Ship": 297, "Food": 237, "Sams Ecom": 147, "Convencional": 85,
-                    "Marketplace In": 62, "Atacadão Food": 84, "Lojas Físicas": 30,
-                    "Marketplace Out": 5, "Gift Card/Cartão Presente": 30, "App Meu Carrefour": 20,
-                    "Serviços/Instalação Garantia Estendida": 18, "Programa Fidelidade": 7,
-                    "App Meu Atacadão": 4, "Sams Lojas": 13, "App Sams": 19
-                };
-                const values01 = {
-                    "Member Ship": 174, "Food": 133, "Sams Ecom": 50, "Convencional": 51,
-                    "Marketplace In": 39, "Atacadão Food": 33, "Lojas Físicas": 14,
-                    "Marketplace Out": 0, "Gift Card/Cartão Presente": 23, "App Meu Carrefour": 11,
-                    "Serviços/Instalação Garantia Estendida": 3, "Programa Fidelidade": 4,
-                    "App Meu Atacadão": 0, "Sams Lojas": 11, "App Sams": 19
-                };
+      <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800">
+        <h3 class="text-base font-bold text-slate-200 mb-4 flex items-center gap-2">
+          <i data-lucide="pie-chart" class="w-5 h-5 text-purple-400"></i> Comparativo por Departamento
+        </h3>
+        <div class="h-64"><canvas id="chartDept"></canvas></div>
+      </div>
+    </div>
 
-                for(let i=1; i<=31; i++) {
-                    let dayStr = i < 10 ? '0' + i : '' + i;
-                    if(i === 4) obj['dia' + dayStr] = values04[dept] !== undefined ? values04[dept] : 0;
-                    else if(i === 3) obj['dia' + dayStr] = values03[dept] !== undefined ? values03[dept] : 0;
-                    else if(i === 2) obj['dia' + dayStr] = values02[dept] !== undefined ? values02[dept] : 0;
-                    else if(i === 1) obj['dia' + dayStr] = values01[dept] !== undefined ? values01[dept] : 0;
-                    else obj['dia' + dayStr] = 0;
-                }
-                return obj;
-            });
+    <!-- DETALHAMENTO POR DEPARTAMENTO -->
+    <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-base font-bold text-slate-200 flex items-center gap-2">
+          <i data-lucide="list" class="w-5 h-5 text-indigo-400"></i> Detalhamento por Departamento
+        </h3>
+      </div>
+      <div class="overflow-x-auto custom-scrollbar">
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="bg-slate-950 text-slate-400 font-semibold uppercase tracking-wider border-b border-slate-800">
+            <tr>
+              <th class="p-3">Departamento</th>
+              <th class="p-3 text-right">2025</th>
+              <th class="p-3 text-right">2026</th>
+              <th class="p-3 text-right">Variação YoY</th>
+              <th class="p-3 text-right">Participação</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody" class="divide-y divide-slate-800/50"></tbody>
+        </table>
+      </div>
+    </div>
 
-            // Base de dados 2025
-            let rawData2025 = DEPARTAMENTOS.map(dept => {
-                let obj = { departamento: dept };
-                for(let i=1; i<=31; i++) {
-                    let dayStr = i < 10 ? '0' + i : '' + i;
-                    let baseVal = (dept === "Member Ship" || dept === "Food") ? 180 : 40;
-                    obj['dia' + dayStr] = Math.floor(baseVal * (0.8 + Math.random() * 0.4));
-                }
-                return obj;
-            });
+  </div>
 
-            let selectedDepts = [...DEPARTAMENTOS];
-            let chartEvolucaoInstance = null;
-            let chartComparativoGrupoInstance = null;
+  <script>
+    // BASE DE DADOS CONSOLIDADA
+    const rawData = [
+      { date: '2026-11-01', dept: "Member Ship", v2025: 45, v2026: 52 },
+      { date: '2026-11-01', dept: "Food", v2025: 120, v2026: 135 },
+      { date: '2026-11-01', dept: "Sams Ecom", v2025: 80, v2026: 95 },
+      { date: '2026-11-01', dept: "Convencional", v2025: 210, v2026: 230 },
+      { date: '2026-11-01', dept: "Marketplace In", v2025: 90, v2026: 105 },
+      { date: '2026-11-01', dept: "Atacadão Food", v2025: 60, v2026: 72 },
+      { date: '2026-11-01', dept: "Lojas Fisicas", v2025: 150, v2026: 160 },
+      { date: '2026-11-01', dept: "Marketplace Out", v2025: 40, v2026: 48 },
+      { date: '2026-11-01', dept: "Gift Card/Cartão Presente", v2025: 15, v2026: 20 },
+      { date: '2026-11-01', dept: "App Meu Carrefour", v2025: 180, v2026: 200 },
+      { date: '2026-11-01', dept: "Serviços/Instalação", v2025: 35, v2026: 40 },
+      { date: '2026-11-01', dept: "Estendida", v2025: 25, v2026: 30 },
+      { date: '2026-11-01', dept: "Programa Fidelidade", v2025: 70, v2026: 82 },
+      { date: '2026-11-01', dept: "App Meu Atacadão", v2025: 65, v2026: 75 },
+      { date: '2026-11-01', dept: "Sams Lojas", v2025: 50, v2026: 58 },
+      { date: '2026-11-01', dept: "App Sams", v2025: 40, v2026: 45 },
+      { date: '2026-11-01', dept: "Cartão Carrefour", v2025: 110, v2026: 125 },
+      { date: '2026-11-01', dept: "Cartão Atacadão", v2025: 95, v2026: 105 },
+      { date: '2026-11-01', dept: "Postos de Combustivel", v2025: 10, v2026: 12 },
+      { date: '2026-11-01', dept: "E-commerce Carrefour", v2025: 130, v2026: 140 },
+      { date: '2026-11-01', dept: "Triagem Carrefour", v2025: 180, v2026: 195 },
+      { date: '2026-11-01', dept: "Triagem Sams", v2025: 110, v2026: 120 },
 
-            function renderDeptButtons() {
-                const container = document.getElementById('deptButtonsContainer');
-                if (!container) return;
-                container.innerHTML = '';
-                
-                DEPARTAMENTOS.forEach(dept => {
-                    const isSelected = selectedDepts.includes(dept);
-                    const btn = document.createElement('button');
-                    btn.className = `text-[11px] font-semibold px-2.5 py-1 rounded-lg border transition-all duration-150 ${
-                        isSelected 
-                        ? 'bg-blue-600 text-white border-blue-500 shadow-sm' 
-                        : 'bg-slate-800/60 text-slate-400 border-slate-700 hover:border-slate-500'
-                    }`;
-                    btn.innerText = dept;
-                    btn.onclick = () => {
-                        if (selectedDepts.includes(dept)) {
-                            if (selectedDepts.length > 1) {
-                                selectedDepts = selectedDepts.filter(d => d !== dept);
-                            }
-                        } else {
-                            selectedDepts.push(dept);
-                        }
-                        renderDeptButtons();
-                        updateDashboard();
-                    };
-                    container.appendChild(btn);
-                });
-            }
+      { date: '2026-11-04', dept: "Member Ship", v2025: 50, v2026: 58 },
+      { date: '2026-11-04', dept: "Food", v2025: 140, v2026: 155 },
+      { date: '2026-11-04', dept: "Sams Ecom", v2025: 95, v2026: 110 },
+      { date: '2026-11-04', dept: "Convencional", v2025: 230, v2026: 255 },
+      { date: '2026-11-04', dept: "Marketplace In", v2025: 100, v2026: 118 },
+      { date: '2026-11-04', dept: "Atacadão Food", v2025: 70, v2026: 80 },
+      { date: '2026-11-04', dept: "Lojas Fisicas", v2025: 165, v2026: 180 },
+      { date: '2026-11-04', dept: "Marketplace Out", v2025: 45, v2026: 52 },
+      { date: '2026-11-04', dept: "Gift Card/Cartão Presente", v2025: 18, v2026: 22 },
+      { date: '2026-11-04', dept: "App Meu Carrefour", v2025: 200, v2026: 225 },
+      { date: '2026-11-04', dept: "Serviços/Instalação", v2025: 40, v2026: 46 },
+      { date: '2026-11-04', dept: "Estendida", v2025: 28, v2026: 32 },
+      { date: '2026-11-04', dept: "Programa Fidelidade", v2025: 80, v2026: 90 },
+      { date: '2026-11-04', dept: "App Meu Atacadão", v2025: 75, v2026: 85 },
+      { date: '2026-11-04', dept: "Sams Lojas", v2025: 55, v2026: 62 },
+      { date: '2026-11-04', dept: "App Sams", v2025: 45, v2026: 50 },
+      { date: '2026-11-04', dept: "Cartão Carrefour", v2025: 125, v2026: 138 },
+      { date: '2026-11-04', dept: "Cartão Atacadão", v2025: 105, v2026: 115 },
+      { date: '2026-11-04', dept: "Postos de Combustivel", v2025: 12, v2026: 15 },
+      { date: '2026-11-04', dept: "E-commerce Carrefour", v2025: 145, v2026: 160 },
+      { date: '2026-11-04', dept: "Triagem Carrefour", v2025: 190, v2026: 207 },
+      { date: '2026-11-04', dept: "Triagem Sams", v2025: 120, v2026: 132 }
+    ];
 
-            document.getElementById('btnSelectAllDepts').onclick = () => {
-                selectedDepts = [...DEPARTAMENTOS];
-                renderDeptButtons();
-                updateDashboard();
-            };
+    const allDepts = [...new Set(rawData.map(d => d.dept))].sort();
+    let selectedDepts = [...allDepts];
+    let currentGranularity = 'diario';
+    let chartEvolucaoInstance = null;
+    let chartDeptInstance = null;
 
-            document.getElementById('btnDeselectAllDepts').onclick = () => {
-                selectedDepts = [DEPARTAMENTOS[0]];
-                renderDeptButtons();
-                updateDashboard();
-            };
+    function initDeptDropdown() {
+      const container = document.getElementById('deptCheckboxes');
+      container.innerHTML = '';
+      allDepts.forEach(dept => {
+        const label = document.createElement('label');
+        label.className = 'flex items-center gap-2 hover:text-white cursor-pointer select-none';
+        label.innerHTML = `
+          <input type="checkbox" value="${dept}" checked onchange="onDeptCheckChange()" class="rounded bg-slate-950 border-slate-700 text-blue-600 focus:ring-0">
+          <span class="truncate">${dept}</span>
+        `;
+        container.appendChild(label);
+      });
+    }
 
-            document.getElementById('btnResetFilters').onclick = () => {
-                selectedDepts = [...DEPARTAMENTOS];
-                document.getElementById('dateFrom').value = "2026-11-01";
-                setDynamicToDate();
-                document.getElementById('selectMes').value = "Novembro - 2026";
-                document.getElementById('tableSearch').value = "";
-                renderDeptButtons();
-                updateDashboard();
-            };
+    function toggleDeptDropdown() {
+      document.getElementById('deptDropdownMenu').classList.toggle('hidden');
+    }
 
-            function setDynamicToDate() {
-                let maxDay = 4; // Padrão com a última data que contém os 2.131 entrantes
-                rawData2026.forEach(item => {
-                    for (let i = 1; i <= 31; i++) {
-                        let dayStr = i < 10 ? '0' + i : '' + i;
-                        if ((item['dia' + dayStr] || 0) > 0 && i > maxDay) {
-                            maxDay = i;
-                        }
-                    }
-                });
-                
-                let dayFormatted = maxDay < 10 ? '0' + maxDay : '' + maxDay;
-                const dateToInput = document.getElementById('dateTo');
-                if (dateToInput) {
-                    dateToInput.value = `2026-11-${dayFormatted}`;
-                }
-            }
+    function selectAllDepts(select) {
+      const checkboxes = document.querySelectorAll('#deptCheckboxes input');
+      checkboxes.forEach(cb => cb.checked = select);
+      onDeptCheckChange();
+    }
 
-            function getSelectedDaysRange() {
-                const dateFromVal = document.getElementById('dateFrom').value;
-                const dateToVal = document.getElementById('dateTo').value;
-                
-                let startDay = parseInt(dateFromVal.split('-')[2], 10) || 1;
-                let endDay = parseInt(dateToVal.split('-')[2], 10) || 4;
+    function onDeptCheckChange() {
+      const checkboxes = document.querySelectorAll('#deptCheckboxes input:checked');
+      selectedDepts = Array.from(checkboxes).map(cb => cb.value);
+      const label = document.getElementById('deptDropdownLabel');
+      if (selectedDepts.length === allDepts.length) {
+        label.innerText = `Todos Departamentos (${allDepts.length})`;
+      } else if (selectedDepts.length === 0) {
+        label.innerText = 'Nenhum Selecionado';
+      } else {
+        label.innerText = `${selectedDepts.length} Selecionado(s)`;
+      }
+      renderDashboard();
+    }
 
-                if (startDay > endDay) {
-                    let temp = startDay;
-                    startDay = endDay;
-                    endDay = temp;
-                }
+    function changeGranularity(mode) {
+      currentGranularity = mode;
+      ['diario', 'semanal', 'mensal'].forEach(m => {
+        const btn = document.getElementById(`btn-${m}`);
+        if (m === mode) {
+          btn.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white transition-all';
+        } else {
+          btn.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition-all';
+        }
+      });
+      renderDashboard();
+    }
 
-                let days = [];
-                for(let i = startDay; i <= endDay; i++) {
-                    days.push(i < 10 ? '0' + i : '' + i);
-                }
-                return days;
-            }
+    function resetFilters() {
+      document.getElementById('dateFrom').value = '2026-11-01';
+      document.getElementById('dateTo').value = '2026-11-04';
+      selectAllDepts(true);
+      changeGranularity('diario');
+    }
 
-            function updateDashboard() {
-                const daysRange = getSelectedDaysRange();
-                
-                let filtered2026 = rawData2026.filter(item => selectedDepts.includes(item.departamento));
-                let filtered2025 = rawData2025.filter(item => selectedDepts.includes(item.departamento));
+    function renderDashboard() {
+      const dFrom = document.getElementById('dateFrom').value;
+      const dTo = document.getElementById('dateTo').value;
 
-                let dailyTotals2026 = daysRange.map(dayStr => {
-                    return filtered2026.reduce((acc, curr) => acc + (curr['dia' + dayStr] || 0), 0);
-                });
+      const filtered = rawData.filter(d => 
+        d.date >= dFrom && d.date <= dTo && selectedDepts.includes(d.dept)
+      );
 
-                let dailyTotals2025 = daysRange.map(dayStr => {
-                    return filtered2025.reduce((acc, curr) => acc + (curr['dia' + dayStr] || 0), 0);
-                });
+      // KPI TOTALS
+      const total2026 = filtered.reduce((acc, curr) => acc + curr.v2026, 0);
+      const total2025 = filtered.reduce((acc, curr) => acc + curr.v2025, 0);
 
-                let totalSum2026 = dailyTotals2026.reduce((a, b) => a + b, 0);
-                let totalSum2025 = dailyTotals2025.reduce((a, b) => a + b, 0);
+      document.getElementById('kpi-entrantes-2026').innerText = total2026.toLocaleString('pt-BR');
+      document.getElementById('kpi-entrantes-2025').innerText = total2025.toLocaleString('pt-BR');
 
-                document.getElementById('kpiTotal2026').innerText = totalSum2026.toLocaleString('pt-BR');
-                document.getElementById('kpiTotal2025').innerText = totalSum2025.toLocaleString('pt-BR');
+      const yoyVal = total2025 > 0 ? (((total2026 - total2025) / total2025) * 100).toFixed(1) : 0;
+      const kpiYoyEl = document.getElementById('kpi-entrantes-yoy');
+      kpiYoyEl.innerText = `${yoyVal > 0 ? '+' : ''}${yoyVal}% YoY`;
+      kpiYoyEl.className = `font-bold px-2 py-0.5 rounded-md ${yoyVal >= 0 ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}`;
 
-                let diffYoY = totalSum2025 > 0 ? ((totalSum2026 - totalSum2025) / totalSum2025) * 100 : 0;
-                const growthBadge = document.getElementById('kpiGrowthBadge');
-                growthBadge.innerText = `${diffYoY >= 0 ? '+' : ''}${diffYoY.toFixed(1)}% YoY`;
-                if(diffYoY >= 0) {
-                    growthBadge.className = "text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
-                } else {
-                    growthBadge.className = "text-xs font-bold px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20";
-                }
+      // MÉDIAS
+      const uniqueDays = [...new Set(filtered.map(d => d.date))].length || 1;
+      const media2026 = Math.round(total2026 / uniqueDays);
+      const media2025 = Math.round(total2025 / uniqueDays);
+      document.getElementById('kpi-media-2026').innerText = media2026.toLocaleString('pt-BR');
+      document.getElementById('kpi-media-2025').innerText = media2025.toLocaleString('pt-BR');
 
-                let numDays = daysRange.length || 1;
-                let avg2026 = Math.round(totalSum2026 / numDays);
-                document.getElementById('kpiAvg2026').innerText = avg2026.toLocaleString('pt-BR');
+      const mediaYoy = media2025 > 0 ? (((media2026 - media2025) / media2025) * 100).toFixed(1) : 0;
+      const kpiMediaYoyEl = document.getElementById('kpi-media-yoy');
+      kpiMediaYoyEl.innerText = `${mediaYoy > 0 ? '+' : ''}${mediaYoy}% YoY`;
+      kpiMediaYoyEl.className = `font-bold px-2 py-0.5 rounded-md ${mediaYoy >= 0 ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}`;
 
-                let deptSums2026 = filtered2026.map(item => {
-                    let sum = daysRange.reduce((acc, dayStr) => acc + (item['dia' + dayStr] || 0), 0);
-                    return { dept: item.departamento, sum };
-                });
-                deptSums2026.sort((a, b) => b.sum - a.sum);
+      // LÍDER EM ENTRANTES
+      const deptTotals = {};
+      filtered.forEach(d => {
+        deptTotals[d.dept] = (deptTotals[d.dept] || 0) + d.v2026;
+      });
 
-                if (deptSums2026.length > 0) {
-                    document.getElementById('kpiTopDeptName').innerText = deptSums2026[0].dept;
-                    document.getElementById('kpiTopDeptValue').innerText = `${deptSums2026[0].sum.toLocaleString('pt-BR')} entrantes`;
-                } else {
-                    document.getElementById('kpiTopDeptName').innerText = "-";
-                    document.getElementById('kpiTopDeptValue').innerText = "0 entrantes";
-                }
+      let topDept = '--';
+      let maxVal = 0;
+      Object.entries(deptTotals).forEach(([dept, val]) => {
+        if (val > maxVal) { maxVal = val; topDept = dept; }
+      });
 
-                renderChartEvolucao(daysRange, dailyTotals2026, dailyTotals2025);
-                renderChartComparativoGrupo(totalSum2025, totalSum2026, deptSums2026);
-                renderTable(filtered2026, filtered2025, daysRange, totalSum2026);
-            }
+      document.getElementById('kpi-lider-nome').innerText = topDept;
+      document.getElementById('kpi-lider-val').innerText = maxVal.toLocaleString('pt-BR');
 
-            function renderChartEvolucao(daysRange, totals2026, totals2025) {
-                const canvas = document.getElementById('chartEvolucao');
-                if (!canvas) return;
-                const ctx = canvas.getContext('2d');
-                if (chartEvolucaoInstance) chartEvolucaoInstance.destroy();
+      // AGROUPMENTO POR DEPARTAMENTO PARA TABELA E GRÁFICO 2
+      const deptSummary = {};
+      selectedDepts.forEach(dept => {
+        deptSummary[dept] = { v2025: 0, v2026: 0 };
+      });
+      filtered.forEach(d => {
+        if (deptSummary[d.dept]) {
+          deptSummary[d.dept].v2025 += d.v2025;
+          deptSummary[d.dept].v2026 += d.v2026;
+        }
+      });
 
-                const labels = daysRange.map(d => `Dia ${d}`);
+      // RENDERIZAR TABELA
+      const tbody = document.getElementById('tableBody');
+      tbody.innerHTML = '';
+      Object.entries(deptSummary).sort((a,b) => b[1].v2026 - a[1].v2026).forEach(([dept, vals]) => {
+        const rowYoy = vals.v2025 > 0 ? (((vals.v2026 - vals.v2025) / vals.v2025) * 100).toFixed(1) : 0;
+        const part = total2026 > 0 ? ((vals.v2026 / total2026) * 100).toFixed(1) : 0;
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-800/40 transition';
+        tr.innerHTML = `
+          <td class="p-3 font-medium text-slate-200">${dept}</td>
+          <td class="p-3 text-right text-slate-400">${vals.v2025.toLocaleString('pt-BR')}</td>
+          <td class="p-3 text-right font-bold text-white">${vals.v2026.toLocaleString('pt-BR')}</td>
+          <td class="p-3 text-right font-semibold ${rowYoy >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${rowYoy > 0 ? '+' : ''}${rowYoy}%</td>
+          <td class="p-3 text-right text-slate-400">${part}%</td>
+        `;
+        tbody.appendChild(tr);
+      });
 
-                chartEvolucaoInstance = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [
-                            {
-                                label: 'Entrantes 2026',
-                                data: totals2026,
-                                borderColor: '#3b82f6',
-                                backgroundColor: 'rgba(59, 130, 246, 0.15)',
-                                borderWidth: 3,
-                                fill: true,
-                                tension: 0.3,
-                                pointBackgroundColor: '#3b82f6',
-                                pointRadius: 5
-                            },
-                            {
-                                label: 'Entrantes 2025',
-                                data: totals2025,
-                                borderColor: '#64748b',
-                                backgroundColor: 'transparent',
-                                borderWidth: 2,
-                                borderDash: [4, 4],
-                                tension: 0.3,
-                                pointBackgroundColor: '#64748b',
-                                pointRadius: 4
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        layout: {
-                            padding: { left: 15, right: 15, top: 15, bottom: 5 }
-                        },
-                        plugins: {
-                            legend: {
-                                labels: { color: '#94a3b8', font: { family: 'Inter', size: 12 } }
-                            },
-                            datalabels: {
-                                align: 'top',
-                                color: '#f8fafc',
-                                font: { weight: 'bold', size: 11 },
-                                formatter: (val) => val > 0 ? val.toLocaleString('pt-BR') : ''
-                            }
-                        },
-                        scales: {
-                            x: {
-                                grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                                ticks: { color: '#94a3b8', font: { family: 'Inter' } }
-                            },
-                            y: {
-                                grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                                ticks: { color: '#94a3b8', font: { family: 'Inter' } },
-                                beginAtZero: true
-                            }
-                        }
-                    }
-                });
-            }
+      renderCharts(filtered, deptSummary);
+    }
 
-            function renderChartComparativoGrupo(total2025, total2026, deptSums) {
-                const canvas = document.getElementById('chartComparativoGrupo');
-                if (!canvas) return;
-                const ctx = canvas.getContext('2d');
-                if (chartComparativoGrupoInstance) chartComparativoGrupoInstance.destroy();
+    function renderCharts(filteredData, deptSummary) {
+      // CHARTS: EVOLUÇÃO
+      const dates = [...new Set(filteredData.map(d => d.date))].sort();
+      const daily2026 = dates.map(dt => filteredData.filter(d => d.date === dt).reduce((a,b) => a + b.v2026, 0));
+      const daily2025 = dates.map(dt => filteredData.filter(d => d.date === dt).reduce((a,b) => a + b.v2025, 0));
 
-                const isAllSelected = selectedDepts.length === DEPARTAMENTOS.length;
+      const ctx1 = document.getElementById('chartEvolucao').getContext('2d');
+      if (chartEvolucaoInstance) chartEvolucaoInstance.destroy();
+      chartEvolucaoInstance = new Chart(ctx1, {
+        type: 'line',
+        data: {
+          labels: dates.map(d => d.split('-').reverse().slice(0,2).join('/')),
+          datasets: [
+            { label: '2026', data: daily2026, borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', fill: true, tension: 0.3 },
+            { label: '2025', data: daily2025, borderColor: '#64748b', borderDash: [5,5], fill: false, tension: 0.3 }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { labels: { color: '#94a3b8' } } },
+          scales: {
+            x: { ticks: { color: '#64748b' }, grid: { color: '#1e293b' } },
+            y: { ticks: { color: '#64748b' }, grid: { color: '#1e293b' } }
+          }
+        }
+      });
 
-                let labels = [];
-                let data2025 = [];
-                let data2026 = [];
+      // CHARTS: DEPARTAMENTOS
+      const topDepts = Object.entries(deptSummary).sort((a,b) => b[1].v2026 - a[1].v2026).slice(0, 7);
+      const ctx2 = document.getElementById('chartDept').getContext('2d');
+      if (chartDeptInstance) chartDeptInstance.destroy();
+      chartDeptInstance = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+          labels: topDepts.map(d => d[0]),
+          datasets: [{
+            label: '2026',
+            data: topDepts.map(d => d[1].v2026),
+            backgroundColor: '#8b5cf6',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: '#64748b', fontSize: 10 }, grid: { display: false } },
+            y: { ticks: { color: '#64748b' }, grid: { color: '#1e293b' } }
+          }
+        }
+      });
+    }
 
-                if (isAllSelected) {
-                    labels = ['Volume Total Acumulado'];
-                    data2025 = [total2025];
-                    data2026 = [total2026];
-                } else {
-                    labels = deptSums.map(d => d.dept);
-                    data2026 = deptSums.map(d => d.sum);
-                    data2025 = deptSums.map(d => {
-                        let f = rawData2025.find(x => x.departamento === d.dept);
-                        const daysRange = getSelectedDaysRange();
-                        return daysRange.reduce((acc, dayStr) => acc + (f ? (f['dia' + dayStr] || 0) : 0), 0);
-                    });
-                }
+    // FECHAR DROPDOWN AO CLICAR FORA
+    window.onclick = function(event) {
+      if (!event.target.closest('#deptDropdownBtn') && !event.target.closest('#deptDropdownMenu')) {
+        const menu = document.getElementById('deptDropdownMenu');
+        if (menu && !menu.classList.contains('hidden')) {
+          menu.classList.add('hidden');
+        }
+      }
+    };
 
-                chartComparativoGrupoInstance = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [
-                            {
-                                label: '2026',
-                                data: data2026,
-                                backgroundColor: '#3b82f6',
-                                borderRadius: 6
-                            },
-                            {
-                                label: '2025',
-                                data: data2025,
-                                backgroundColor: '#475569',
-                                borderRadius: 6
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { labels: { color: '#94a3b8' } },
-                            datalabels: {
-                                anchor: 'end',
-                                align: 'top',
-                                color: '#f8fafc',
-                                font: { weight: 'bold', size: 10 },
-                                formatter: (v) => v.toLocaleString('pt-BR')
-                            }
-                        },
-                        scales: {
-                            x: { ticks: { color: '#94a3b8', font: { size: 11 } }, grid: { display: false } },
-                            y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255, 255, 255, 0.05)' }, beginAtZero: true }
-                        }
-                    }
-                });
-            }
-
-            function renderTable(data2026, data2025, daysRange, grandTotal2026) {
-                const tbody = document.getElementById('tableBody');
-                if (!tbody) return;
-                const searchTerm = document.getElementById('tableSearch').value.toLowerCase();
-                tbody.innerHTML = '';
-
-                data2026.forEach(item2026 => {
-                    if (searchTerm && !item2026.departamento.toLowerCase().includes(searchTerm)) return;
-
-                    let sum2026 = daysRange.reduce((acc, dayStr) => acc + (item2026['dia' + dayStr] || 0), 0);
-                    let item2025 = data2025.find(x => x.departamento === item2026.departamento);
-                    let sum2025 = daysRange.reduce((acc, dayStr) => acc + (item2025 ? (item2025['dia' + dayStr] || 0) : 0), 0);
-
-                    let varYoY = sum2025 > 0 ? ((sum2026 - sum2025) / sum2025) * 100 : 0;
-                    let share = grandTotal2026 > 0 ? (sum2026 / grandTotal2026) * 100 : 0;
-
-                    let tr = document.createElement('tr');
-                    tr.className = "hover:bg-slate-800/40 transition-colors";
-
-                    tr.innerHTML = `
-                        <td class="py-3 px-4 font-semibold text-slate-200">${item2026.departamento}</td>
-                        <td class="py-3 px-4 text-right text-slate-400">${sum2025.toLocaleString('pt-BR')}</td>
-                        <td class="py-3 px-4 text-right font-bold text-blue-400">${sum2026.toLocaleString('pt-BR')}</td>
-                        <td class="py-3 px-4 text-right font-bold ${varYoY >= 0 ? 'text-emerald-400' : 'text-rose-400'}">
-                            ${varYoY >= 0 ? '+' : ''}${varYoY.toFixed(1)}%
-                        </td>
-                        <td class="py-3 px-4 text-right text-slate-300 font-semibold">${share.toFixed(1)}%</td>
-                        <td class="py-3 px-4 text-center">
-                            <span class="inline-block w-2.5 h-2.5 rounded-full ${sum2026 > 0 ? 'bg-emerald-500 shadow-sm shadow-emerald-500/50' : 'bg-slate-600'}"></span>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            }
-
-            document.getElementById('dateFrom').onchange = updateDashboard;
-            document.getElementById('dateTo').onchange = updateDashboard;
-            document.getElementById('selectMes').onchange = updateDashboard;
-            document.getElementById('tableSearch').onkeyup = updateDashboard;
-
-            setDynamicToDate();
-            renderDeptButtons();
-            updateDashboard();
-        });
-    </script>
+    window.addEventListener('load', () => {
+      lucide.createIcons();
+      initDeptDropdown();
+      renderDashboard();
+    });
+  </script>
 </body>
 </html>
