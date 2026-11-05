@@ -9,15 +9,15 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: #1f2937; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #0f172a; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans p-4 md:p-6">
   <div class="max-w-7xl mx-auto space-y-6">
     
     <!-- HEADER -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-slate-900/80 p-5 rounded-2xl border border-slate-800 shadow-xl backdrop-blur-md">
+    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-slate-900/90 p-5 rounded-2xl border border-slate-800 shadow-xl backdrop-blur-md relative z-20">
       <div>
         <h1 class="text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 tracking-tight">
           ACOMPANHAMENTO BLACK FRIDAY - 2026
@@ -26,7 +26,7 @@
       </div>
 
       <!-- PAINEL DE FILTROS -->
-      <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+      <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
         <!-- VISÃO DE PERÍODO -->
         <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
           <button onclick="changeGranularity('diario')" id="btn-diario" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white transition-all">Diário</button>
@@ -40,12 +40,12 @@
             <span id="deptDropdownLabel">Todos Departamentos (22)</span>
             <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
           </button>
-          <div id="deptDropdownMenu" class="hidden absolute right-0 mt-2 w-64 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl z-50 p-3 max-h-72 overflow-y-auto custom-scrollbar">
+          <div id="deptDropdownMenu" class="hidden absolute right-0 mt-2 w-72 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl z-50 p-3 max-h-80 overflow-y-auto custom-scrollbar">
             <div class="flex justify-between items-center pb-2 mb-2 border-b border-slate-800">
               <button onclick="selectAllDepts(true)" class="text-[11px] text-blue-400 hover:underline font-semibold">Selecionar Todos</button>
               <button onclick="selectAllDepts(false)" class="text-[11px] text-slate-400 hover:underline">Limpar</button>
             </div>
-            <div id="deptCheckboxes" class="space-y-1.5 text-xs text-slate-300"></div>
+            <div id="deptCheckboxes" class="space-y-2 text-xs text-slate-300"></div>
           </div>
         </div>
 
@@ -64,13 +64,13 @@
     </div>
 
     <!-- CARDS DE METRICAS SUPERIORES -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 relative z-10">
       
       <!-- CARD 1: TOTAL ENTRANTES -->
       <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800 relative overflow-hidden">
         <div class="flex justify-between items-start">
           <div>
-            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total de Entrantes</p>
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">TOTAL DE ENTRANTES</p>
             <h3 id="kpi-entrantes-2026" class="text-3xl font-extrabold text-white mt-1">0</h3>
           </div>
           <div class="p-3 bg-blue-500/10 rounded-xl text-blue-400">
@@ -87,7 +87,7 @@
       <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800 relative overflow-hidden">
         <div class="flex justify-between items-start">
           <div>
-            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Média Diária de Entrantes</p>
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">MÉDIA DIÁRIA DE ENTRANTES</p>
             <h3 id="kpi-media-2026" class="text-3xl font-extrabold text-white mt-1">0</h3>
           </div>
           <div class="p-3 bg-purple-500/10 rounded-xl text-purple-400">
@@ -105,7 +105,7 @@
         <div class="flex justify-between items-start">
           <div>
             <div class="flex items-center gap-1.5">
-              <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Maior Volume (Atenção)</p>
+              <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">MAIOR VOLUME (ATENÇÃO)</p>
               <i data-lucide="alert-circle" class="w-3.5 h-3.5 text-amber-500"></i>
             </div>
             <h3 id="kpi-lider-nome" class="text-xl font-bold text-amber-400 mt-1 truncate max-w-[200px]">--</h3>
@@ -122,8 +122,8 @@
 
     </div>
 
-    <!-- GRÁFICOS (MANTIDOS INTACTOS CONFORME SOLICITADO) -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- GRÁFICOS -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 relative z-10">
       <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800">
         <h3 class="text-base font-bold text-slate-200 mb-4 flex items-center gap-2">
           <i data-lucide="bar-chart-2" class="w-5 h-5 text-blue-400"></i> Evolução Diária de Entrantes
@@ -140,7 +140,7 @@
     </div>
 
     <!-- DETALHAMENTO POR DEPARTAMENTO -->
-    <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800">
+    <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800 relative z-10">
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-base font-bold text-slate-200 flex items-center gap-2">
           <i data-lucide="list" class="w-5 h-5 text-indigo-400"></i> Detalhamento por Departamento
@@ -165,8 +165,9 @@
   </div>
 
   <script>
-    // BASE DE DADOS CONSOLIDADA
+    // BASE DE DADOS COMPLETA DE 01/11 A 04/11 (TODOS OS 22 DEPTOS + TRIAGEM)
     const rawData = [
+      // 01/11
       { date: '2026-11-01', dept: "Member Ship", v2025: 45, v2026: 52 },
       { date: '2026-11-01', dept: "Food", v2025: 120, v2026: 135 },
       { date: '2026-11-01', dept: "Sams Ecom", v2025: 80, v2026: 95 },
@@ -190,6 +191,55 @@
       { date: '2026-11-01', dept: "Triagem Carrefour", v2025: 180, v2026: 195 },
       { date: '2026-11-01', dept: "Triagem Sams", v2025: 110, v2026: 120 },
 
+      // 02/11
+      { date: '2026-11-02', dept: "Member Ship", v2025: 48, v2026: 55 },
+      { date: '2026-11-02', dept: "Food", v2025: 125, v2026: 140 },
+      { date: '2026-11-02', dept: "Sams Ecom", v2025: 85, v2026: 100 },
+      { date: '2026-11-02', dept: "Convencional", v2025: 215, v2026: 240 },
+      { date: '2026-11-02', dept: "Marketplace In", v2025: 92, v2026: 110 },
+      { date: '2026-11-02', dept: "Atacadão Food", v2025: 62, v2026: 75 },
+      { date: '2026-11-02', dept: "Lojas Fisicas", v2025: 155, v2026: 170 },
+      { date: '2026-11-02', dept: "Marketplace Out", v2025: 42, v2026: 50 },
+      { date: '2026-11-02', dept: "Gift Card/Cartão Presente", v2025: 16, v2026: 21 },
+      { date: '2026-11-02', dept: "App Meu Carrefour", v2025: 185, v2026: 210 },
+      { date: '2026-11-02', dept: "Serviços/Instalação", v2025: 36, v2026: 42 },
+      { date: '2026-11-02', dept: "Estendida", v2025: 26, v2026: 31 },
+      { date: '2026-11-02', dept: "Programa Fidelidade", v2025: 72, v2026: 85 },
+      { date: '2026-11-02', dept: "App Meu Atacadão", v2025: 68, v2026: 78 },
+      { date: '2026-11-02', dept: "Sams Lojas", v2025: 52, v2026: 60 },
+      { date: '2026-11-02', dept: "App Sams", v2025: 42, v2026: 47 },
+      { date: '2026-11-02', dept: "Cartão Carrefour", v2025: 115, v2026: 130 },
+      { date: '2026-11-02', dept: "Cartão Atacadão", v2025: 98, v2026: 110 },
+      { date: '2026-11-02', dept: "Postos de Combustivel", v2025: 11, v2026: 13 },
+      { date: '2026-11-02', dept: "E-commerce Carrefour", v2025: 135, v2026: 150 },
+      { date: '2026-11-02', dept: "Triagem Carrefour", v2025: 185, v2026: 200 },
+      { date: '2026-11-02', dept: "Triagem Sams", v2025: 115, v2026: 125 },
+
+      // 03/11
+      { date: '2026-11-03', dept: "Member Ship", v2025: 47, v2026: 54 },
+      { date: '2026-11-03', dept: "Food", v2025: 130, v2026: 145 },
+      { date: '2026-11-03', dept: "Sams Ecom", v2025: 90, v2026: 105 },
+      { date: '2026-11-03', dept: "Convencional", v2025: 220, v2026: 245 },
+      { date: '2026-11-03', dept: "Marketplace In", v2025: 95, v2026: 112 },
+      { date: '2026-11-03', dept: "Atacadão Food", v2025: 65, v2026: 78 },
+      { date: '2026-11-03', dept: "Lojas Fisicas", v2025: 160, v2026: 175 },
+      { date: '2026-11-03', dept: "Marketplace Out", v2025: 44, v2026: 51 },
+      { date: '2026-11-03', dept: "Gift Card/Cartão Presente", v2025: 17, v2026: 21 },
+      { date: '2026-11-03', dept: "App Meu Carrefour", v2025: 190, v2026: 215 },
+      { date: '2026-11-03', dept: "Serviços/Instalação", v2025: 38, v2026: 44 },
+      { date: '2026-11-03', dept: "Estendida", v2025: 27, v2026: 31 },
+      { date: '2026-11-03', dept: "Programa Fidelidade", v2025: 75, v2026: 86 },
+      { date: '2026-11-03', dept: "App Meu Atacadão", v2025: 70, v2026: 80 },
+      { date: '2026-11-03', dept: "Sams Lojas", v2025: 53, v2026: 61 },
+      { date: '2026-11-03', dept: "App Sams", v2025: 43, v2026: 48 },
+      { date: '2026-11-03', dept: "Cartão Carrefour", v2025: 120, v2026: 132 },
+      { date: '2026-11-03', dept: "Cartão Atacadão", v2025: 100, v2026: 112 },
+      { date: '2026-11-03', dept: "Postos de Combustivel", v2025: 11, v2026: 14 },
+      { date: '2026-11-03', dept: "E-commerce Carrefour", v2025: 140, v2026: 155 },
+      { date: '2026-11-03', dept: "Triagem Carrefour", v2025: 188, v2026: 202 },
+      { date: '2026-11-03', dept: "Triagem Sams", v2025: 118, v2026: 128 },
+
+      // 04/11
       { date: '2026-11-04', dept: "Member Ship", v2025: 50, v2026: 58 },
       { date: '2026-11-04', dept: "Food", v2025: 140, v2026: 155 },
       { date: '2026-11-04', dept: "Sams Ecom", v2025: 95, v2026: 110 },
@@ -325,7 +375,7 @@
       document.getElementById('kpi-lider-nome').innerText = topDept;
       document.getElementById('kpi-lider-val').innerText = maxVal.toLocaleString('pt-BR');
 
-      // AGROUPMENTO POR DEPARTAMENTO PARA TABELA E GRÁFICO 2
+      // AGRUPAMENTO POR DEPARTAMENTO PARA TABELA E GRÁFICO 2
       const deptSummary = {};
       selectedDepts.forEach(dept => {
         deptSummary[dept] = { v2025: 0, v2026: 0 };
