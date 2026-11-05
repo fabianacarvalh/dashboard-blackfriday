@@ -7,10 +7,18 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- FLATPICKR CALENDÁRIO -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://npmcdn.com/flatpickr/dist/l10n/pt.js"></script>
+
   <style>
     .custom-scrollbar::-webkit-scrollbar { width: 6px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: #0f172a; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    .flatpickr-calendar { background: #0f172a !important; border: 1px solid #334155 !important; border-radius: 12px !important; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5) !important; }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans p-4 md:p-6">
@@ -48,12 +56,10 @@
           </div>
         </div>
 
-        <!-- FILTROS DE DATA -->
-        <div class="flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800 text-xs">
-          <span class="text-slate-400">De:</span>
-          <input type="date" id="dateFrom" class="bg-transparent text-slate-200 focus:outline-none" value="2026-11-01" onchange="renderDashboard()">
-          <span class="text-slate-400">Até:</span>
-          <input type="date" id="dateTo" class="bg-transparent text-slate-200 focus:outline-none" value="2026-11-04" onchange="renderDashboard()">
+        <!-- CALENDÁRIO INTERATIVO -->
+        <div class="flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800 text-xs text-slate-200 cursor-pointer hover:border-slate-700 transition">
+          <i data-lucide="calendar" class="w-4 h-4 text-blue-400"></i>
+          <input type="text" id="dateRangePicker" class="bg-transparent focus:outline-none cursor-pointer w-44 text-xs font-medium text-slate-200" placeholder="Selecione o período">
         </div>
 
         <button onclick="resetFilters()" class="bg-slate-800 hover:bg-slate-700 p-2 rounded-xl text-slate-300 transition" title="Redefinir Filtros">
@@ -268,12 +274,33 @@
     let currentGranularity = 'diario';
     let chartEvolucaoInstance = null;
     let chartDeptInstance = null;
+    let pickerInstance = null;
+    let selectedDateFrom = '2026-11-01';
+    let selectedDateTo = '2026-11-04';
 
     const monthNames = {
       "11": "Novembro",
       "12": "Dezembro",
       "01": "Janeiro"
     };
+
+    function initCalendar() {
+      pickerInstance = flatpickr("#dateRangePicker", {
+        mode: "range",
+        dateFormat: "Y-m-d",
+        altInput: true,
+        altFormat: "d/m/Y",
+        defaultDate: [selectedDateFrom, selectedDateTo],
+        locale: flatpickr.l10ns.pt,
+        onChange: function(selectedDates, dateStr, instance) {
+          if (selectedDates.length === 2) {
+            selectedDateFrom = instance.formatDate(selectedDates[0], "Y-m-d");
+            selectedDateTo = instance.formatDate(selectedDates[1], "Y-m-d");
+            renderDashboard();
+          }
+        }
+      });
+    }
 
     function initDeptDropdown() {
       const container = document.getElementById('deptCheckboxes');
@@ -327,15 +354,18 @@
     }
 
     function resetFilters() {
-      document.getElementById('dateFrom').value = '2026-11-01';
-      document.getElementById('dateTo').value = '2026-11-04';
+      selectedDateFrom = '2026-11-01';
+      selectedDateTo = '2026-11-04';
+      if (pickerInstance) {
+        pickerInstance.setDate([selectedDateFrom, selectedDateTo]);
+      }
       selectAllDepts(true);
       changeGranularity('diario');
     }
 
     function renderDashboard() {
-      const dFrom = document.getElementById('dateFrom').value;
-      const dTo = document.getElementById('dateTo').value;
+      const dFrom = selectedDateFrom;
+      const dTo = selectedDateTo;
 
       const filtered = rawData.filter(d => 
         d.date >= dFrom && d.date <= dTo && selectedDepts.includes(d.dept)
@@ -442,10 +472,9 @@
       });
 
       // CHARTS: COMPARATIVO POR MÊS (2025 VS 2026 CONSOLIDADO POR MÊS)
-      // Agrupa os totais filtrados por mês
       const monthlySummary = {};
       filteredData.forEach(d => {
-        const mKey = d.date.substring(5, 7); // ex: "11"
+        const mKey = d.date.substring(5, 7);
         const mLabel = monthNames[mKey] || mKey;
         if (!monthlySummary[mLabel]) {
           monthlySummary[mLabel] = { v2025: 0, v2026: 0 };
@@ -514,6 +543,7 @@
 
     window.addEventListener('load', () => {
       lucide.createIcons();
+      initCalendar();
       initDeptDropdown();
       renderDashboard();
     });
