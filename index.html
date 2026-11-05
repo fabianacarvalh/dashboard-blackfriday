@@ -132,7 +132,7 @@
 
       <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800">
         <h3 class="text-base font-bold text-slate-200 mb-4 flex items-center gap-2">
-          <i data-lucide="pie-chart" class="w-5 h-5 text-purple-400"></i> Comparativo por Departamento (2025 vs 2026)
+          <i data-lucide="pie-chart" class="w-5 h-5 text-purple-400"></i> Comparativo Consolidado Por Mês (2025 vs 2026)
         </h3>
         <div class="h-64"><canvas id="chartDept"></canvas></div>
       </div>
@@ -269,6 +269,12 @@
     let chartEvolucaoInstance = null;
     let chartDeptInstance = null;
 
+    const monthNames = {
+      "11": "Novembro",
+      "12": "Dezembro",
+      "01": "Janeiro"
+    };
+
     function initDeptDropdown() {
       const container = document.getElementById('deptCheckboxes');
       container.innerHTML = '';
@@ -374,7 +380,7 @@
       document.getElementById('kpi-lider-nome').innerText = topDept;
       document.getElementById('kpi-lider-val').innerText = maxVal.toLocaleString('pt-BR');
 
-      // AGRUPAMENTO POR DEPARTAMENTO PARA TABELA E GRÁFICO 2
+      // AGRUPAMENTO POR DEPARTAMENTO PARA TABELA
       const deptSummary = {};
       selectedDepts.forEach(dept => {
         deptSummary[dept] = { v2025: 0, v2026: 0 };
@@ -435,35 +441,61 @@
         }
       });
 
-      // CHARTS: DEPARTAMENTOS (BARRA DUPLA YoY: 2025 VS 2026)
-      const topDepts = Object.entries(deptSummary).sort((a,b) => b[1].v2026 - a[1].v2026).slice(0, 7);
+      // CHARTS: COMPARATIVO POR MÊS (2025 VS 2026 CONSOLIDADO POR MÊS)
+      // Agrupa os totais filtrados por mês
+      const monthlySummary = {};
+      filteredData.forEach(d => {
+        const mKey = d.date.substring(5, 7); // ex: "11"
+        const mLabel = monthNames[mKey] || mKey;
+        if (!monthlySummary[mLabel]) {
+          monthlySummary[mLabel] = { v2025: 0, v2026: 0 };
+        }
+        monthlySummary[mLabel].v2025 += d.v2025;
+        monthlySummary[mLabel].v2026 += d.v2026;
+      });
+
+      const monthLabels = Object.keys(monthlySummary);
+      const data2025 = monthLabels.map(m => monthlySummary[m].v2025);
+      const data2026 = monthLabels.map(m => monthlySummary[m].v2026);
+
       const ctx2 = document.getElementById('chartDept').getContext('2d');
       if (chartDeptInstance) chartDeptInstance.destroy();
       chartDeptInstance = new Chart(ctx2, {
         type: 'bar',
         data: {
-          labels: topDepts.map(d => d[0]),
+          labels: monthLabels,
           datasets: [
             {
               label: '2025',
-              data: topDepts.map(d => d[1].v2025),
+              data: data2025,
               backgroundColor: '#64748b',
-              borderRadius: 4
+              borderRadius: 6,
+              maxBarThickness: 50
             },
             {
               label: '2026',
-              data: topDepts.map(d => d[1].v2026),
+              data: data2026,
               backgroundColor: '#8b5cf6',
-              borderRadius: 4
+              borderRadius: 6,
+              maxBarThickness: 50
             }
           ]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          plugins: { legend: { display: true, labels: { color: '#94a3b8' } } },
+          plugins: { 
+            legend: { display: true, labels: { color: '#94a3b8' } },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return `${context.dataset.label}: ${context.raw.toLocaleString('pt-BR')} entrantes`;
+                }
+              }
+            }
+          },
           scales: {
-            x: { ticks: { color: '#64748b', fontSize: 10 }, grid: { display: false } },
+            x: { ticks: { color: '#94a3b8' }, grid: { display: false } },
             y: { ticks: { color: '#64748b' }, grid: { color: '#1e293b' } }
           }
         }
